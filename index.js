@@ -31,9 +31,9 @@ var connection = mysql.createConnection({
           "Add an employee",
           "Add a role",
           "Add a department",
-          "View an employee",
-          "View a role",
-          "View a department",
+          "View all employees",
+          "View all roles",
+          "View all departments",
           "Update an employee role",
         ]
       })
@@ -51,15 +51,15 @@ var connection = mysql.createConnection({
           addDepartment();
           break;
   
-        case "View an employee":
+        case "View all employees":
           viewEmployee();
           break;
   
-        case "View a role":
+        case "View all roles":
           viewRole();
           break;
 
-        case "View a department":
+        case "View all departments":
           viewDepartment();
           break;
 
@@ -68,35 +68,35 @@ var connection = mysql.createConnection({
           break;
         }
       });
-  }
+  };
   
-  function addEmployee() {
-    inquirer
-      .prompt({
-        name: "firstName",
-        type: "input",
-        message: "What is the employee's first name?"
-      },
-      {
-        name: "lastName",
-        type: "input",
-        message: "What is the employee's last name?"
-      },
-      {
-        name: "role",
-        type: "list",
-        message: "What is the employee's role?",
-        choices: ["Sales Lead", "Sales Person", "Lead Engineer", 
-            "Software Engineer", "Account Manager", "Accountant", 
-            "Legal Team Lead", "Lawyer"],
-      },
-      {
-        name: "manager",
-        type: "list",
-        message: "Who is the employee's manager?",
-        choices: ["Claudine Renee", "Bjorn Moore", "Raina Quest", "Robin Lee", "None"],
-      },
-      )
+//   function addEmployee() {
+//     inquirer
+//       .prompt({
+//         name: "firstName",
+//         type: "input",
+//         message: "What is the employee's first name?"
+//       },
+//       {
+//         name: "lastName",
+//         type: "input",
+//         message: "What is the employee's last name?"
+//       },
+//       {
+//         name: "role",
+//         type: "list",
+//         message: "What is the employee's role?",
+//         choices: ["Sales Lead", "Sales Person", "Lead Engineer", 
+//             "Software Engineer", "Account Manager", "Accountant", 
+//             "Legal Team Lead", "Lawyer"],
+//       },
+//       {
+//         name: "manager",
+//         type: "list",
+//         message: "Who is the employee's manager?",
+//         choices: ["Claudine Renee", "Bjorn Moore", "Raina Quest", "Robin Lee", "None"],
+//       },
+//       )
 //       .then(function(answer) {
 //         let query = `SELECT title, id FROM role_table WHERE title = ${role}`;
 //         connection.query(query, { artist: answer.artist }, function(err, res) {
@@ -106,6 +106,36 @@ var connection = mysql.createConnection({
 //         });
 //       });
 //   }
+
+function viewEmployee() {
+    let query = `SELECT employee_table.id, first_name, last_name, title, salary FROM employee_table
+        INNER JOIN role_table ON employee_table.id = role_table.id ORDER BY id`;
+        connection.query(query, function(err, res) {
+            if (err) throw err;
+            console.table(res);
+            start();
+        });
+};
+
+function viewRole() {
+    let query = `SELECT id, title, salary FROM role_table`;
+        connection.query(query, function(err, res) {
+            if (err) throw err;
+            console.table(res);
+            start();
+        });
+};
+
+function viewDepartment() {
+    let query = `SELECT * FROM department_table`;
+        connection.query(query, function(err, res) {
+            if (err) throw err;
+            console.table(res);
+            start();
+        });
+};
+
+
   
 //   function multiSearch() {
 //     var query = "SELECT artist FROM top5000 GROUP BY artist HAVING count(*) > 1";
@@ -222,4 +252,3 @@ var connection = mysql.createConnection({
 //         });
 //       });
 //   }
-  
